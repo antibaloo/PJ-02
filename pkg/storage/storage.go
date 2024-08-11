@@ -2,13 +2,12 @@ package storage
 
 // Post - публикация.
 type Post struct {
-	ID          int
-	Title       string
-	Content     string
-	AuthorID    int
-	AuthorName  string
-	CreatedAt   int64
-	PublishedAt int64
+	ID          int    `json:"ID"`
+	Title       string `json:"title"`
+	Content     string `json:"content"`
+	AuthorID    int    `json:"author_id"`
+	CreatedAt   int64  `json:"created_at"`
+	PublishedAt int64  `json:"published_at"`
 }
 
 // Interface задаёт контракт на работу с БД.
