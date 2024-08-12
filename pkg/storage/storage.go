@@ -2,11 +2,11 @@ package storage
 
 // Post - публикация.
 type Post struct {
-	ID          int    `json:"ID"`
+	ID          int    `json:"id"`
 	Title       string `json:"title"`
 	Content     string `json:"content"`
 	AuthorID    int    `json:"author_id"`
-	AuthorName  string `json:"-"`
+	AuthorName  string `json:"author_name"`
 	CreatedAt   int64  `json:"created_at"`
 	PublishedAt int64  `json:"published_at"`
 }

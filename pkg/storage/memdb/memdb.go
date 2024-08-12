@@ -28,6 +28,7 @@ func New() *Store {
 	}
 }
 
+// Генератор тестовых данных
 func (s *Store) TestData() error {
 	id := s.AddAuthor("Mike")
 	err := s.AddPost(storage.Post{
