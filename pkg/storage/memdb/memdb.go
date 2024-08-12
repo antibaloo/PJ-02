@@ -77,6 +77,7 @@ func (s *Store) AddPost(post storage.Post) error {
 	defer s.idMute.Unlock()
 	s.lastPostID++
 	post.ID = s.lastPostID
+	post.CreatedAt = time.Now().Unix()
 	p, err := json.Marshal(post)
 	if err != nil {
 		s.lastPostID--
