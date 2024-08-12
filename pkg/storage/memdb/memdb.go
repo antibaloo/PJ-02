@@ -31,20 +31,18 @@ func New() *Store {
 func (s *Store) TestData() error {
 	id := s.AddAuthor("Mike")
 	err := s.AddPost(storage.Post{
-		Title:     "fist post",
-		Content:   "content of first post",
-		AuthorID:  id,
-		CreatedAt: time.Now().Unix(),
+		Title:    "fist post",
+		Content:  "content of first post",
+		AuthorID: id,
 	})
 	if err != nil {
 		return err
 	}
 	id = s.AddAuthor("Ted")
 	err = s.AddPost(storage.Post{
-		Title:     "second post",
-		Content:   "content of second post",
-		AuthorID:  id,
-		CreatedAt: time.Now().Unix(),
+		Title:    "second post",
+		Content:  "content of second post",
+		AuthorID: id,
 	})
 	if err != nil {
 		return err
