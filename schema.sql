@@ -14,5 +14,5 @@ CREATE TABLE posts (
     published_at BIGINT DEFAULT 0
 );
 
-INSERT INTO authors (name) VALUES ('Дмитрий');
+INSERT INTO authors (name) VALUES ('Дмитрий'),('Владимир'),('Николай');
 INSERT INTO posts (author_id, title, content) VALUES (1 'Статья', 'Содержание статьи');
