@@ -20,13 +20,17 @@ func main() {
 	var srv server
 	// Реляционная БД PostgreSQL.
 	pwd := os.Getenv("postgrespass")
-	conString := "postgres://postgres:" + pwd + "@localhost:5432/tasks?sslmode=disable"
+	conString := "postgres://postgres:" + pwd + "@localhost:5432/gonews?sslmode=disable"
 	db, err := postgres.New(conString)
 	if err != nil {
 		log.Fatal(err)
 	}
+	err = db.TestData()
+	if err != nil {
+		log.Fatal(err)
+	}
 	//Освобождаем ресурсы по завершению приложения
-	db.Pool.Close()
+	defer db.Pool.Close()
 	// Инициализируем хранилище сервера конкретной БД.
 	srv.db = db
 	// Создаём объект API и регистрируем обработчики.
