@@ -6,6 +6,7 @@ type Post struct {
 	Title       string `json:"title"`
 	Content     string `json:"content"`
 	AuthorID    int    `json:"author_id"`
+	AuthorName  string `json:"-"`
 	CreatedAt   int64  `json:"created_at"`
 	PublishedAt int64  `json:"published_at"`
 }
