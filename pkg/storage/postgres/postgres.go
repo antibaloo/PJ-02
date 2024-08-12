@@ -80,7 +80,7 @@ func (s *Store) Posts() ([]storage.Post, error) {
 	var posts []storage.Post
 	rows, err := s.Pool.Query(
 		context.Background(),
-		`SELECT posts.id, title, content, author_id, name, created_at, published_at FROM posts, authors WHERE posts.id = authors.id ORDER BY id`,
+		`SELECT posts.id, title, content, author_id, name, created_at, published_at FROM posts, authors WHERE posts.author_id = authors.id ORDER BY id`,
 	)
 	if err != nil {
 		return posts, err
@@ -120,12 +120,32 @@ func (s *Store) AddPost(post storage.Post) error {
 }
 
 // Обновление поста
-func (s *Store) UpdatePost(storage.Post) error {
+func (s *Store) UpdatePost(post storage.Post) error {
+	_, err := s.Pool.Exec(
+		context.Background(),
+		`UPDATE posts SET title = $1, content = $2, author_id = $3, published_at = $4 WHERE id = $5`,
+		post.Title,
+		post.Content,
+		post.AuthorID,
+		post.PublishedAt,
+		post.ID,
+	)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 // Удаление пота
-func (s *Store) DeletePost(storage.Post) error {
+func (s *Store) DeletePost(post storage.Post) error {
+	_, err := s.Pool.Exec(
+		context.Background(),
+		`DELETE FROM posts WHERE id = $1`,
+		post.ID,
+	)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
