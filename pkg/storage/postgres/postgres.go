@@ -24,17 +24,117 @@ func New(conStr string) (*Store, error) {
 	return &s, nil
 }
 
+// Генератор тестовых данных
+func (s *Store) TestData() error {
+	request := `
+	DROP TABLE IF EXISTS posts, authors;
+
+	CREATE TABLE authors (
+    	id SERIAL PRIMARY KEY,
+    	name TEXT NOT NULL
+	);
+
+	CREATE TABLE posts (
+    	id SERIAL PRIMARY KEY,
+    	title TEXT  NOT NULL,
+    	content TEXT NOT NULL,
+    	author_id INTEGER REFERENCES authors(id) NOT NULL,
+    	created_at BIGINT DEFAULT extract(epoch from now()),
+    	published_at BIGINT DEFAULT 0
+	);
+	`
+	_, err := s.Pool.Exec(context.Background(), request)
+	if err != nil {
+		return err
+	}
+
+	id, err := s.AddAuthor("Robert")
+	if err != nil {
+		return err
+	}
+	err = s.AddPost(storage.Post{
+		Title:    "fist post",
+		Content:  "content of first post",
+		AuthorID: id,
+	})
+	if err != nil {
+		return err
+	}
+	id, err = s.AddAuthor("John")
+	if err != nil {
+		return err
+	}
+	err = s.AddPost(storage.Post{
+		Title:    "second post",
+		Content:  "content of second post",
+		AuthorID: id,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Возвращает все посты
 func (s *Store) Posts() ([]storage.Post, error) {
 	var posts []storage.Post
+	rows, err := s.Pool.Query(
+		context.Background(),
+		`SELECT posts.id, title, content, author_id, name, created_at, published_at FROM posts, authors WHERE posts.id = authors.id ORDER BY id`,
+	)
+	if err != nil {
+		return posts, err
+	}
+	for rows.Next() {
+		var post storage.Post
+		err = rows.Scan(
+			&post.ID,
+			&post.Title,
+			&post.Content,
+			&post.AuthorID,
+			&post.AuthorName,
+			&post.CreatedAt,
+			&post.PublishedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, post)
+	}
 	return posts, nil
 }
 
-func (s *Store) AddPost(storage.Post) error {
+// Добавление поста
+func (s *Store) AddPost(post storage.Post) error {
+	_, err := s.Pool.Exec(
+		context.Background(),
+		`INSERT INTO posts (title, content, author_id) VALUES ($1, $2, $3)`,
+		post.Title,
+		post.Content,
+		post.AuthorID,
+	)
+	if err != nil {
+		return err
+	}
 	return nil
 }
+
+// Обновление поста
 func (s *Store) UpdatePost(storage.Post) error {
 	return nil
 }
+
+// Удаление пота
 func (s *Store) DeletePost(storage.Post) error {
 	return nil
+}
+
+// Добавление нового автора в хранилище
+func (s *Store) AddAuthor(name string) (int, error) {
+	var id int
+	err := s.Pool.QueryRow(context.Background(), `INSERT INTO authors (name) VALUES($1) returning id;`, name).Scan(&id)
+	if err != nil {
+		return id, err
+	}
+	return id, nil
 }
