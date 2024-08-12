@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"sync"
+	"time"
 )
 
 // Хранилище данных.
@@ -23,7 +24,32 @@ func New() *Store {
 		authors:      make(map[int]string),
 		lastPostID:   0,
 		lastAuthorID: 0,
+		idMute:       &sync.Mutex{},
 	}
+}
+
+func (s *Store) TestData() error {
+	id := s.AddAuthor("Mike")
+	err := s.AddPost(storage.Post{
+		Title:     "fist post",
+		Content:   "content of first post",
+		AuthorID:  id,
+		CreatedAt: time.Now().Unix(),
+	})
+	if err != nil {
+		return err
+	}
+	id = s.AddAuthor("Ted")
+	err = s.AddPost(storage.Post{
+		Title:     "second post",
+		Content:   "content of second post",
+		AuthorID:  id,
+		CreatedAt: time.Now().Unix(),
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Возвращает все посты
