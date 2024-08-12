@@ -75,11 +75,13 @@ func (s *Store) Posts() ([]storage.Post, error) {
 func (s *Store) AddPost(post storage.Post) error {
 	s.idMute.Lock()
 	defer s.idMute.Unlock()
+	s.lastPostID++
+	post.ID = s.lastPostID
 	p, err := json.Marshal(post)
 	if err != nil {
+		s.lastPostID--
 		return err
 	}
-	s.lastPostID++
 	s.posts[s.lastPostID] = string(p)
 	return nil
 }
