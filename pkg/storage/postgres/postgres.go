@@ -136,7 +136,7 @@ func (s *Store) UpdatePost(post storage.Post) error {
 	return nil
 }
 
-// Удаление пота
+// Удаление поста
 func (s *Store) DeletePost(post storage.Post) error {
 	_, err := s.Pool.Exec(
 		context.Background(),
