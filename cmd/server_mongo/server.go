@@ -23,6 +23,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err = db.TestData()
+	if err != nil {
+		log.Fatal(err)
+	}
 	//Освобождаем ресурсы по завершению приложения
 	defer db.Client.Disconnect(context.Background())
 	// Инициализируем хранилище сервера конкретной БД.
