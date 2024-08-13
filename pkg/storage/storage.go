@@ -2,7 +2,7 @@ package storage
 
 // Post - публикация.
 type Post struct {
-	ID          int    `json:"id"`
+	ID          int    `json:"id" bson:"_id"` //добавлена нотация bson для работы с mongodb
 	Title       string `json:"title"`
 	Content     string `json:"content"`
 	AuthorID    int    `json:"author_id"`
