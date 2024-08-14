@@ -3,6 +3,7 @@ package postgres
 import (
 	"GoNews/pkg/storage"
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -60,6 +61,7 @@ func (s *Store) TestData() error {
 	if err != nil {
 		return err
 	}
+	time.Sleep(5 * time.Second)
 	id, err = s.AddAuthor("John")
 	if err != nil {
 		return err

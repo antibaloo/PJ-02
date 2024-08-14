@@ -39,6 +39,7 @@ func (s *Store) TestData() error {
 	if err != nil {
 		return err
 	}
+	time.Sleep(5 * time.Second)
 	id = s.AddAuthor("Ted")
 	err = s.AddPost(storage.Post{
 		Title:    "second post",
