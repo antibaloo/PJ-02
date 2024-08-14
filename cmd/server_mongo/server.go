@@ -18,11 +18,12 @@ type server struct {
 func main() {
 	// Создаём объект сервера.
 	var srv server
-	conString := "mongodb://localhost:2717/"
+	conString := "mongodb://localhost:27017/"
 	db, err := mongodb.New(conString)
 	if err != nil {
 		log.Fatal(err)
 	}
+	db.Client.Database("data").Drop(context.TODO()) // Удаление БД перед запуском
 	err = db.TestData()
 	if err != nil {
 		log.Fatal(err)
